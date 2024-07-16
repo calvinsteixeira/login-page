@@ -6,7 +6,22 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {},
+  theme: {
+    extend: {
+      colors: {
+        'background': 'rgb(var(--background))',
+        'foreground': 'rgb(var(--foreground))',
+        'primary': 'rgb(var(--primary))',
+        'primary-foreground': 'rgb(var(--primary-foreground))',
+        'border': 'rgb(var(--border))',
+        'label': 'rgb(var(--label))',
+        'placeholder': 'rgb(var(--placeholder))',
+        'muted': 'rgb(var(--muted))'
+      },
+    }
+  },
   plugins: [],
 };
 export default config;
+
+
