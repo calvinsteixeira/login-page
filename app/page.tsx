@@ -9,8 +9,8 @@ import { TextInput, Button } from "@/components";
 
 const loginSchema = yup
   .object({
-    username: yup.string().required(),
-    password: yup.string().required(),
+    username: yup.string().required('campo obrigatório!'),
+    password: yup.string().required('campo obrigatório!'),
   })
   .required();
 
@@ -25,20 +25,20 @@ const LoginForm = (): React.ReactNode => {
   const submitLogin = (data: ILoginForm) => console.log(data);
 
   return (
-    <form className="space-y-12">
+    <form className="space-y-12" onSubmit={handleSubmit(submitLogin)}>
       <div className="space-y-4">
         <TextInput
           label="usuário:"
-          errorMessage={errors.username?.message}
+          errormessage={errors.username?.message}
           {...register("username")}
         />
         <TextInput
           label="senha:"
-          errorMessage={errors.password?.message}
+          errormessage={errors.password?.message}
           {...register("password")}
         />
       </div>
-      <Button onClick={() => handleSubmit(submitLogin)} btnText="Entrar"/>
+      <Button type="submit" btntext="Entrar"/>
     </form>
   );
 };

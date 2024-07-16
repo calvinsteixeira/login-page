@@ -2,7 +2,7 @@ import React from "react";
 import { AiOutlineLoading3Quarters } from "@/icons";
 
 interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  btnText: string;
+  btntext: string;
   loading?: boolean;
 }
 
@@ -16,7 +16,7 @@ export default function Button(props: IButton) {
       {props.loading ? (
         <AiOutlineLoading3Quarters className="self-center text-primary-foreground animate-spin" />
       ) : (
-        props.btnText
+        props.btntext
       )}
     </button>
   );

@@ -16,7 +16,8 @@ const config: Config = {
         'border': 'rgb(var(--border))',
         'label': 'rgb(var(--label))',
         'placeholder': 'rgb(var(--placeholder))',
-        'muted': 'rgb(var(--muted))'
+        'muted': 'rgb(var(--muted))',
+        'destructive': 'rgb(var(--destructive))'
       },
     }
   },

@@ -12,7 +12,8 @@
   --border: 196, 196, 196;
   --label: 24, 24, 24;
   --placeholder: 99, 99, 100;
-  --muted: 105, 105, 105
+  --muted: 105, 105, 105;
+  --destructive: 255, 71, 71;
 }
 
 /* .dark {
