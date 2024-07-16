@@ -1,4 +1,4 @@
-import TextInput from './inputs/TextInput'
 import Button from './Actions/Button'
+import Input from './inputs/Input'
 
-export { TextInput, Button }
+export { Input, Button }

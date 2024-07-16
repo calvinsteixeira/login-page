@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { ILoginForm } from "@/types/forms";
-import { TextInput, Button } from "@/components";
+import { Input, Button } from "@/components";
 
 const loginSchema = yup
   .object({
@@ -27,16 +27,17 @@ const LoginForm = (): React.ReactNode => {
   return (
     <form className="space-y-12" onSubmit={handleSubmit(submitLogin)}>
       <div className="space-y-4">
-        <TextInput
-          label="usuário:"
-          errormessage={errors.username?.message}
-          {...register("username")}
-        />
-        <TextInput
-          label="senha:"
-          errormessage={errors.password?.message}
-          {...register("password")}
-        />
+        <Input.Root>
+          <Input.Label text="usuário:"/>
+          <Input.Generic {...register("username")}/>
+          <Input.ErrorMessage text={errors.username?.message}/>
+        </Input.Root>
+
+        <Input.Root>
+          <Input.Label text="senha:"/>
+          <Input.Password {...register("password")}/>
+          <Input.ErrorMessage text={errors.password?.message}/>
+        </Input.Root>      
       </div>
       <Button type="submit" btntext="Entrar"/>
     </form>
