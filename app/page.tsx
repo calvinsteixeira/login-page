@@ -26,8 +26,18 @@ const LoginForm = (): React.ReactNode => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <TextInput errorMessage={errors.username?.message} {...register("username")} />
-      <TextInput errorMessage={errors.password?.message} {...register("password")} />
+      <div className="space-y-4">
+        <TextInput
+          label="usuário:"
+          errorMessage={errors.username?.message}
+          {...register("username")}
+        />
+        <TextInput
+          label="senha:"
+          errorMessage={errors.password?.message}
+          {...register("password")}
+        />
+      </div>
       {/* <input type="submit" /> */}
     </form>
   );
