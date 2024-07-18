@@ -6,6 +6,6 @@ interface ILabel {
 
 export default function Label(props: ILabel) {
   return (
-    <label className="text-label font-medium">{props.text}</label>
+    <label className="text-label text-sm font-medium">{props.text}</label>
   )
 }

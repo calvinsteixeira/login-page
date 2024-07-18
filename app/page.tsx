@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ILoginForm } from '@/types/forms';
 import { Input, Button } from '@/components';
+import Image from 'next/image';
 
 const loginSchema = yup
   .object({
@@ -25,8 +26,8 @@ const LoginForm = (): React.ReactNode => {
   const submitLogin = (data: ILoginForm) => console.log(data);
 
   return (
-    <form className="space-y-12" onSubmit={handleSubmit(submitLogin)}>
-      <div className="space-y-4">
+    <form className="space-y-10" onSubmit={handleSubmit(submitLogin)}>
+      <div className="space-y-2">
         <Input.Root>
           <Input.Label text="usuário:" />
           <Input.Generic {...register('username')} />
@@ -46,15 +47,24 @@ const LoginForm = (): React.ReactNode => {
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between py-16">
-      <div className="w-full space-y-10">
+    <main className="flex w-full min-h-screen flex-col items-center py-12 overflow-hidden fixed">
+      <div className="w-full">
+        <Image className="opacity-10" src={'/right-side-image.png'} alt="imagem" fill objectFit="cover" />
+      </div>
+      <div className="relative w-full space-y-10">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-left text-primary">Seja bem vindo!</h1>
           <p className="text-muted text-sm">
             Por favor, insira seus dados para <span className="font-bold">logar</span>
           </p>
         </div>
-        <LoginForm />
+        <div className='space-y-4'>
+          <LoginForm />
+          <Button mode="outlined" btntext="Entrar com o Google" />
+        </div>
+        <p className="text-sm text-center mt-10">
+          Não possui uma conta? <span className="text-primary font-semibold">Registre-se</span>
+        </p>
       </div>
     </main>
   );

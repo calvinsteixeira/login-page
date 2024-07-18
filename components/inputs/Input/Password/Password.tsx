@@ -19,9 +19,9 @@ function Password(props: IPassword, ref: React.Ref<HTMLInputElement>) {
         className="w-full h-12 border-border focus:border-primary outline-none border-[1px] px-3"
       />
       {isPasswordVisible ? (
-        <FaEye onClick={togglePasswordVisibility} className="text-2xl self-center text-primary absolute inset-y-0 right-4 top-3 items-center" />
+        <FaEye onClick={togglePasswordVisibility} className="text-xl text-primary absolute inset-y-0 right-4 my-auto" />
       ) : (
-        <FaEyeSlash onClick={togglePasswordVisibility} className="text-2xl self-center text-primary absolute inset-y-0 right-4 top-3 items-center" />
+        <FaEyeSlash onClick={togglePasswordVisibility} className="text-xl text-primary absolute inset-y-0 right-4 my-auto" />
       )}
     </div>
   );

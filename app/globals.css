@@ -28,7 +28,7 @@
   }
 } */
 
-@layer components {
+@layer base {
   main {
     @apply px-8
   }
