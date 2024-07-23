@@ -9,7 +9,9 @@ import { Input, Button } from '@/components';
 import { FaGoogle } from '@/icons';
 import Image from 'next/image';
 
-const LoginForm = forwardRef<{ resetLoginForm: () => void }>((_, ref): React.ReactNode => {
+type FormModeType = 'login' | 'register'
+
+const LoginForm = (): React.ReactNode => {
   const loginSchema = yup
     .object({
       username: yup.string().required('campo obrigatório!'),
@@ -26,8 +28,6 @@ const LoginForm = forwardRef<{ resetLoginForm: () => void }>((_, ref): React.Rea
     resolver: yupResolver(loginSchema),
   });
   const submitLogin = (data: ILoginForm) => console.log(data);
-
-  useImperativeHandle(ref, () => ({ resetLoginForm }));
 
   return (
     <>
@@ -50,9 +50,9 @@ const LoginForm = forwardRef<{ resetLoginForm: () => void }>((_, ref): React.Rea
       <Button icon={<FaGoogle className="text-primary" />} mode="outlined" btntext="Entrar com o Google" />
     </>
   );
-});
+};
 
-const RegisterForm = forwardRef<{ resetRegisterForm: () => void }>((_, ref): React.ReactNode => {
+const RegisterForm = (): React.ReactNode => {
   const registerSchema = yup
     .object({
       email: yup.string().required('campo obrigatório!'),
@@ -72,7 +72,7 @@ const RegisterForm = forwardRef<{ resetRegisterForm: () => void }>((_, ref): Rea
   });
   const submitRegister = (data: IRegisterForm) => console.log(data);
 
-  useImperativeHandle(ref, () => ({ resetRegisterForm }));
+  // useImperativeHandle(ref, () => ({ resetRegisterForm }));
 
   return (
     <form className="space-y-10" onSubmit={handleSubmit(submitRegister)}>
@@ -104,19 +104,13 @@ const RegisterForm = forwardRef<{ resetRegisterForm: () => void }>((_, ref): Rea
       <Button type="submit" btntext="Cadastrar" />
     </form>
   );
-});
+};
 
 export default function Home() {
-  const [formMode, setFormMode] = React.useState<'login' | 'register'>('login');
-  const loginForm = useRef(null);
-  const registerForm = useRef(null);
+  const [formMode, setFormMode] = React.useState<FormModeType>('login');
 
-  function handleFormMode() {
-    if (formMode == 'login') {
-      setFormMode('register');
-    } else {
-      setFormMode('login');
-    }
+  function handleFormMode(mode: FormModeType) {
+    setFormMode(mode)
   }
 
   return (
@@ -132,16 +126,24 @@ export default function Home() {
           </p>
         </div>
         <div className="w-full flex flex-row justify-around gap-2">
-          <span className={`flex-1 flex justify-center px-4 py-2 ${formMode === 'login' ? 'bg-primary/50 text-primary-foreground' : 'text-primary'}`}>
+          <span
+            onClick={() => handleFormMode('login')}
+            className={`flex-1 flex justify-center font-semibold px-4 py-3 ${
+              formMode === 'login' ? 'border-b-2 border-primary text-primary' : 'text-primary'
+            }`}
+          >
             Entrar
           </span>
           <span
-            className={`flex-1 flex justify-center px-4 py-2 ${formMode === 'register' ? 'bg-primary/50 text-primary-foreground' : 'text-primary'}`}
+            onClick={() => handleFormMode('register')}
+            className={`flex-1 flex justify-center font-semibold px-4 py-3 ${
+              formMode === 'register' ? 'border-b-2 border-primary text-primary' : 'text-primary'
+            }`}
           >
-            Cadastrar
+            Registre-se
           </span>
         </div>
-        <div className="space-y-4">{formMode == 'login' ? <LoginForm ref={loginForm} /> : <RegisterForm ref={registerForm} />}</div>
+        <div className="space-y-4">{formMode == 'login' ? <LoginForm /> : <RegisterForm />}</div>
       </div>
     </main>
   );
