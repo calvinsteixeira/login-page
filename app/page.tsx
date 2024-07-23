@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ILoginForm } from '@/types/forms';
 import { Input, Button } from '@/components';
+import { FaGoogle } from '@/icons';
 import Image from 'next/image';
 
 const loginSchema = yup
@@ -58,9 +59,9 @@ export default function Home() {
             Por favor, insira seus dados para <span className="font-bold">logar</span>
           </p>
         </div>
-        <div className='space-y-4'>
+        <div className="space-y-4">
           <LoginForm />
-          <Button mode="outlined" btntext="Entrar com o Google" />
+          <Button icon={<FaGoogle className="text-primary" />} mode="outlined" btntext="Entrar com o Google" />
         </div>
         <p className="text-sm text-center mt-10">
           Não possui uma conta? <span className="text-primary font-semibold">Registre-se</span>
