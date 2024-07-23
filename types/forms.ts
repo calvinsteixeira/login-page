@@ -3,4 +3,12 @@ interface ILoginForm {
   password: string;
 }
 
-export type { ILoginForm }
+interface IRegisterForm {
+  email: string;
+  name: string;
+  username: string;
+  password: string;
+
+}
+
+export type { ILoginForm, IRegisterForm }
