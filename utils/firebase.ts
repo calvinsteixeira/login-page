@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -25,5 +26,6 @@ const firebaseConfig = isDevelopment ? firebaseLocalConfig : firebaseDeployConfi
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const firestore = getFirestore(app);
 
-export { auth };
+export { auth, firestore, doc, setDoc };

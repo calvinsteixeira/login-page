@@ -3,8 +3,11 @@
 import React from "react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/utils/firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, firestore, doc, setDoc } from "@/utils/firebase";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -33,8 +36,8 @@ const LoginForm = (): React.ReactNode => {
   } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: "calvingsx@gmail.com",
-      password: "@Calvintex7",
+      email: "",
+      password: "",
     },
   });
 
@@ -46,11 +49,9 @@ const LoginForm = (): React.ReactNode => {
         data.password
       );
 
-      if(result.user.refreshToken) {
+      if (result.user.refreshToken) {
         // redirect user
-      } else {
-        throw new Error
-      }
+      } 
     } catch (error: any) {
       if (error) {
         toast.error("E-mail ou senha incorretos", {
@@ -63,7 +64,7 @@ const LoginForm = (): React.ReactNode => {
           draggable: true,
           progress: undefined,
           theme: "colored",
-          transition: Bounce        
+          transition: Bounce,
         });
       }
     }
@@ -101,7 +102,6 @@ const RegisterForm = (): React.ReactNode => {
     .object({
       email: yup.string().required("campo obrigatório!"),
       name: yup.string().required("campo obrigatório!"),
-      username: yup.string().required("campo obrigatório!"),
       password: yup.string().required("campo obrigatório!"),
     })
     .required();
@@ -113,28 +113,72 @@ const RegisterForm = (): React.ReactNode => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      password: ""
+    }
   });
-  const submitRegister = (data: IRegisterForm) => console.log(data);
+  const submitRegister = async (data: IRegisterForm) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
+      if (userCredential.user) {
+        const user = userCredential.user;
+
+        await setDoc(doc(firestore, "users", user.uid), {
+          name: data.name,
+          createdAt: new Date(),
+        });
+
+        toast.success("Usuário cadastrado com sucesso", {
+          toastId: "customId",
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    } catch (error: any) {
+      if (error) {
+        toast.error("Falha ao cadastrar usuário", {
+          toastId: "customId",
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    }
+  };
 
   return (
     <form className="space-y-10" onSubmit={handleSubmit(submitRegister)}>
       <div className="space-y-2">
         <Input.Root>
+          <Input.Label text="name:" />
+          <Input.Generic {...register("name")} />
+          <Input.ErrorMessage text={errors.name?.message} />
+        </Input.Root>
+
+        <Input.Root>
           <Input.Label text="email:" />
           <Input.Generic {...register("email")} />
-          <Input.ErrorMessage text={errors.username?.message} />
-        </Input.Root>
-
-        <Input.Root>
-          <Input.Label text="nome:" />
-          <Input.Generic {...register("name")} />
-          <Input.ErrorMessage text={errors.username?.message} />
-        </Input.Root>
-
-        <Input.Root>
-          <Input.Label text="username:" />
-          <Input.Generic {...register("username")} />
-          <Input.ErrorMessage text={errors.username?.message} />
+          <Input.ErrorMessage text={errors.name?.message} />
         </Input.Root>
 
         <Input.Root>
