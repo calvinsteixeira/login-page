@@ -6,7 +6,7 @@
   --background: 248, 248, 248;
   --foreground: 3, 3, 3;
 
-  --primary: 234, 69, 76;
+  --primary: 252, 94, 3;
   --primary-foreground: 255, 255, 255;
 
   --border: 196, 196, 196;
@@ -34,4 +34,9 @@
   }
 }
 
-@layer utilities {}
+@layer utilities {
+  .border-transition {
+    @apply transition-all duration-300 ease-in-out;
+    width: 0;
+  }
+}

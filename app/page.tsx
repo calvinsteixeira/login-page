@@ -6,10 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ILoginForm, IRegisterForm } from '@/types/forms';
 import { Input, Button } from '@/components';
-import { FaGoogle } from '@/icons';
+import { FaGoogle, MdOutlineKeyboardArrowRight } from '@/icons';
 import Image from 'next/image';
 
-type FormModeType = 'login' | 'register'
+type FormModeType = 'login' | 'register';
 
 const LoginForm = (): React.ReactNode => {
   const loginSchema = yup
@@ -72,8 +72,6 @@ const RegisterForm = (): React.ReactNode => {
   });
   const submitRegister = (data: IRegisterForm) => console.log(data);
 
-  // useImperativeHandle(ref, () => ({ resetRegisterForm }));
-
   return (
     <form className="space-y-10" onSubmit={handleSubmit(submitRegister)}>
       <div className="space-y-2">
@@ -110,7 +108,7 @@ export default function Home() {
   const [formMode, setFormMode] = React.useState<FormModeType>('login');
 
   function handleFormMode(mode: FormModeType) {
-    setFormMode(mode)
+    setFormMode(mode);
   }
 
   return (
@@ -121,26 +119,22 @@ export default function Home() {
       <div className="w-full space-y-10">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-left text-primary">Seja bem vindo!</h1>
-          <p className="text-muted text-sm">
-            Por favor, insira seus dados para <span className="font-bold">logar</span>
-          </p>
+          <p className="text-muted text-sm">Insira seus dados para continuar</p>
         </div>
-        <div className="w-full flex flex-row justify-around gap-2">
+        <div className="w-full flex mb-12 flex-row justify-around gap-2">
           <span
             onClick={() => handleFormMode('login')}
-            className={`flex-1 flex justify-center font-semibold px-4 py-3 ${
-              formMode === 'login' ? 'border-b-2 border-primary text-primary' : 'text-primary'
-            }`}
+            className={`relative flex-1 flex justify-center items-center font-semibold px-4 py-3 text-primary gap-4`}
           >
+            {formMode === 'login' && <MdOutlineKeyboardArrowRight size={22} className="animate-bounce absolute left-6 text-md" />}
             Entrar
           </span>
           <span
             onClick={() => handleFormMode('register')}
-            className={`flex-1 flex justify-center font-semibold px-4 py-3 ${
-              formMode === 'register' ? 'border-b-2 border-primary text-primary' : 'text-primary'
-            }`}
+            className={`relative flex-1 flex justify-center items-center font-semibold px-4 py-3 text-primary gap-4`}
           >
-            Registre-se
+            {formMode === 'register' && <MdOutlineKeyboardArrowRight size={22} className="animate-bounce absolute left-2 text-md" />}
+            Cadastrar
           </span>
         </div>
         <div className="space-y-4">{formMode == 'login' ? <LoginForm /> : <RegisterForm />}</div>
