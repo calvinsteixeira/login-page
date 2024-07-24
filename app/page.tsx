@@ -1,6 +1,8 @@
 'use client';
 
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/utils/firebase';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -27,7 +29,17 @@ const LoginForm = (): React.ReactNode => {
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
-  const submitLogin = (data: ILoginForm) => console.log(data);
+
+  const submitLogin = async (data: ILoginForm) => {
+    try {
+      const result = await signInWithEmailAndPassword(auth, data.username, data.password)
+      console.log(result)
+    } catch (error) {
+      if(error instanceof Error) {
+        console.error('Erro na autenticação:', error.message)
+      }
+    }
+  };
 
   return (
     <>
@@ -126,14 +138,14 @@ export default function Home() {
             onClick={() => handleFormMode('login')}
             className={`relative flex-1 flex justify-center items-center font-semibold px-4 py-3 text-primary gap-4`}
           >
-            {formMode === 'login' && <MdOutlineKeyboardArrowRight size={22} className="animate-bounce absolute left-6 text-md" />}
+            {formMode === 'login' && <MdOutlineKeyboardArrowRight size={22} className="animate-bounce absolute left-[10%] text-md" />}
             Entrar
           </span>
           <span
             onClick={() => handleFormMode('register')}
             className={`relative flex-1 flex justify-center items-center font-semibold px-4 py-3 text-primary gap-4`}
           >
-            {formMode === 'register' && <MdOutlineKeyboardArrowRight size={22} className="animate-bounce absolute left-2 text-md" />}
+            {formMode === 'register' && <MdOutlineKeyboardArrowRight size={22} className="animate-bounce absolute left-[1%] text-md" />}
             Cadastrar
           </span>
         </div>
