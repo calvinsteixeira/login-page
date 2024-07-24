@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBGPgGmFL8-2HModaiHsvTRIJ4my0EoUZ0",
-  authDomain: "login-page-92b25.firebaseapp.com",
-  projectId: "login-page-92b25",
-  storageBucket: "login-page-92b25.appspot.com",
-  messagingSenderId: "201718369967",
-  appId: "1:201718369967:web:f31d6ec3d32688649b0e5a"
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
