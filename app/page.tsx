@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
+import { FirebaseError } from "@firebase/util";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, firestore, doc, setDoc } from "@/utils/firebase";
+import { auth, firestore, doc, setDoc, firebaseErrors } from "@/utils/firebase";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -51,9 +52,18 @@ const LoginForm = (): React.ReactNode => {
 
       if (result.user.refreshToken) {
         // redirect user
+        resetLoginForm({
+          email: "",
+          password: ""
+        })
       } 
     } catch (error: any) {
+      resetLoginForm({
+        email: "",
+        password: ""
+      })
       if (error) {
+        console.log('Login error: ', error.message);
         toast.error("E-mail ou senha incorretos", {
           toastId: "customId",
           position: "top-right",
@@ -98,6 +108,7 @@ const LoginForm = (): React.ReactNode => {
 };
 
 const RegisterForm = (): React.ReactNode => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const registerSchema = yup
     .object({
       email: yup.string().required("campo obrigatório!"),
@@ -114,12 +125,13 @@ const RegisterForm = (): React.ReactNode => {
   } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      email: "",
-      name: "",
-      password: ""
+      email: "calvinteixeira@hotmail.com",
+      name: "calvin",
+      password: "calvinst"
     }
   });
   const submitRegister = async (data: IRegisterForm) => {
+    setLoading(true)
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -147,10 +159,35 @@ const RegisterForm = (): React.ReactNode => {
           theme: "colored",
           transition: Bounce,
         });
+
+        resetRegisterForm({
+          email: "",
+          password: "",
+          name: ""
+        })
+        setLoading(false)
       }
     } catch (error: any) {
+      setLoading(false)
+
       if (error) {
-        toast.error("Falha ao cadastrar usuário", {
+        console.log('Register error: ', error.message);
+        let errorMessage = firebaseErrors[`${error.code}`] || "Falha no cadastro"
+
+        toast.error(errorMessage, {
+          toastId: "customId",
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.error("Falha no servidor", {
           toastId: "customId",
           position: "top-right",
           autoClose: 4000,
@@ -187,7 +224,7 @@ const RegisterForm = (): React.ReactNode => {
           <Input.ErrorMessage text={errors.password?.message} />
         </Input.Root>
       </div>
-      <Button type="submit" btntext="Cadastrar" />
+      <Button loading={loading} type="submit" btntext="Cadastrar" />
     </form>
   );
 };
