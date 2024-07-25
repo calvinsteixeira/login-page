@@ -25,7 +25,8 @@ const firebaseDeployConfig = {
 const firebaseConfig = isDevelopment ? firebaseLocalConfig : firebaseDeployConfig
 
 const firebaseErrors: Record<string, string>= {
-    "auth/email-already-in-use": "Email já cadastrado"
+    "auth/email-already-in-use": "Email já cadastrado",
+    "auth/invalid-credential": "Credenciais inválidas"
 }
 
 const app = initializeApp(firebaseConfig);
