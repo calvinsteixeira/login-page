@@ -128,9 +128,12 @@ const RegisterForm = (): React.ReactNode => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const registerSchema = yup
         .object({
-            email: yup.string().required("campo obrigatório!"),
-            name: yup.string().required("campo obrigatório!"),
-            password: yup.string().required("campo obrigatório!"),
+            email: yup.string().email('Digite um email válido').required("campo obrigatório"),
+            name: yup.string().required("campo obrigatório"),
+            password: yup.string().min(6, 'A senha deve ter pelo menos 6 digitos').required("campo obrigatório"),
+            confirmPassword: yup.string()
+                .oneOf([yup.ref('password')], 'As senhas devem coincidir.')
+                .required('campo obrigatório')
         })
         .required();
 
@@ -180,7 +183,8 @@ const RegisterForm = (): React.ReactNode => {
                 resetRegisterForm({
                     email: "",
                     password: "",
-                    name: ""
+                    name: "",
+                    confirmPassword: ""
                 })
                 setLoading(false)
             }
@@ -232,13 +236,19 @@ const RegisterForm = (): React.ReactNode => {
                 <Input.Root>
                     <Input.Label text="email:"/>
                     <Input.Generic {...register("email")} />
-                    <Input.ErrorMessage text={errors.name?.message}/>
+                    <Input.ErrorMessage text={errors.email?.message}/>
                 </Input.Root>
 
                 <Input.Root>
                     <Input.Label text="senha:"/>
                     <Input.Password {...register("password")} />
                     <Input.ErrorMessage text={errors.password?.message}/>
+                </Input.Root>
+
+                <Input.Root>
+                    <Input.Label text="Confirmação da senha:"/>
+                    <Input.Password {...register("confirmPassword")} />
+                    <Input.ErrorMessage text={errors.confirmPassword?.message}/>
                 </Input.Root>
             </div>
             <Button loading={loading} type="submit" btntext="Cadastrar"/>
@@ -257,8 +267,8 @@ export default function Home() {
         <main className="flex w-full min-h-screen flex-col items-center py-12">
             <ToastContainer/>
             {/* <div className="hidden w-full h-20 bg-primary">
-        <Image className="opacity-10" src={'/right-side-image.png'} alt="imagem" width={200} height={200} />
-      </div> */}
+                <Image className="opacity-10" src={'/right-side-image.png'} alt="imagem" width={200} height={200} />
+            </div> */}
             <div className="w-full space-y-10">
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold text-left text-primary">
