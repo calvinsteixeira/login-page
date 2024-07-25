@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth";
-import {getFirestore, doc, setDoc} from 'firebase/firestore';
+import {getFirestore, doc, setDoc, getDoc} from 'firebase/firestore';
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -33,5 +34,6 @@ const firebaseErrors: Record<string, string>= {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
-export {auth, firestore, doc, setDoc, firebaseErrors};
+export {auth, firestore, doc, setDoc, getDoc, firebaseErrors, googleProvider, signInWithPopup};

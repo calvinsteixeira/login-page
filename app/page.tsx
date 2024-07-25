@@ -1,20 +1,19 @@
 "use client";
 
 import React from "react";
-import {FirebaseError} from "@firebase/util";
 import {ToastContainer, toast, Bounce} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
     signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
+    createUserWithEmailAndPassword
 } from "firebase/auth";
-import {auth, firestore, doc, setDoc, firebaseErrors} from "@/utils/firebase";
+import {auth, firestore, doc, setDoc, getDoc, firebaseErrors, googleProvider, signInWithPopup} from "@/utils/firebase";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {ILoginForm, IRegisterForm} from "@/types/forms";
 import {Input, Button} from "@/components";
-import {FaGoogle, MdOutlineKeyboardArrowRight} from "@/icons";
+import {FcGoogle, MdOutlineKeyboardArrowRight} from "@/icons";
 
 type FormModeType = "login" | "register";
 
@@ -95,6 +94,61 @@ const LoginForm = (): React.ReactNode => {
             }
         }
     };
+    const submitLoginWithGoogle = async () => {
+        setLoading(true)
+
+        try {
+            const result = await signInWithPopup(auth, googleProvider)
+            const user = result.user;
+            const docRef = doc(firestore, 'users', user.uid)
+            const docSnap = await getDoc(docRef)
+
+            if (!docSnap.exists()) {
+                await setDoc(docRef, {
+                    name: user.displayName,
+                    createdAt: new Date()
+                });
+
+                // redirect user
+
+                setLoading(false)
+            }
+        } catch (error: any) {
+            setLoading(false)
+
+            if (error) {
+                console.log('Register error: ', error.message);
+                let errorMessage = firebaseErrors[`${error.code}`] || "Falha no cadastro"
+
+                toast.error(errorMessage, {
+                    toastId: "customId",
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            } else {
+                toast.error("Falha no servidor", {
+                    toastId: "customId",
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            }
+        }
+
+    }
 
     return (
         <>
@@ -115,8 +169,9 @@ const LoginForm = (): React.ReactNode => {
                 <Button loading={loading} type="submit" btntext="Entrar"/>
             </form>
             <Button
+                onClick={() => submitLoginWithGoogle()}
                 loading={loading}
-                icon={<FaGoogle className="text-primary"/>}
+                icon={<FcGoogle className="text-xl"/>}
                 mode="outlined"
                 btntext="Entrar com o Google"
             />
@@ -167,7 +222,7 @@ const RegisterForm = (): React.ReactNode => {
                     createdAt: new Date(),
                 });
 
-                toast.success("Usuário cadastrado com sucesso", {
+                toast.success("Cadastro realizado com sucesso", {
                     toastId: "customId",
                     position: "top-right",
                     autoClose: 4000,
