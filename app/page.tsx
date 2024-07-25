@@ -14,6 +14,7 @@ import * as yup from "yup";
 import {ILoginForm, IRegisterForm} from "@/types/forms";
 import {Input, Button} from "@/components";
 import {FcGoogle, MdOutlineKeyboardArrowRight} from "@/icons";
+// import { registerWithEmailAndPassword } from "@/app/api/auth/route";
 
 type FormModeType = "login" | "register";
 
@@ -200,83 +201,95 @@ const RegisterForm = (): React.ReactNode => {
     } = useForm({
         resolver: yupResolver(registerSchema),
         defaultValues: {
-            email: "",
-            name: "",
-            password: ""
+            email: "calvingsx@gmail.com",
+            name: "calvin",
+            password: "teste123",
+            confirmPassword: "teste123"
         }
     });
     const submitRegister = async (data: IRegisterForm) => {
         setLoading(true)
+
         try {
-            const userCredential = await createUserWithEmailAndPassword(
-                auth,
-                data.email,
-                data.password
-            );
+            const result = await fetch('/api/auth', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
 
-            if (userCredential.user) {
-                const user = userCredential.user;
-
-                await setDoc(doc(firestore, "users", user.uid), {
-                    name: data.name,
-                    createdAt: new Date(),
-                });
-
-                toast.success("Cadastro realizado com sucesso", {
-                    toastId: "customId",
-                    position: "top-right",
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-
-                resetRegisterForm({
-                    email: "",
-                    password: "",
-                    name: "",
-                    confirmPassword: ""
-                })
-                setLoading(false)
-            }
-        } catch (error: any) {
-            setLoading(false)
-
-            if (error) {
-                console.log('Register error: ', error.message);
-                let errorMessage = firebaseErrors[`${error.code}`] || "Falha no cadastro"
-
-                toast.error(errorMessage, {
-                    toastId: "customId",
-                    position: "top-right",
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-            } else {
-                toast.error("Falha no servidor", {
-                    toastId: "customId",
-                    position: "top-right",
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-            }
+            console.log(result)
+        } catch(error: any) {
+            console.log('Client error: ', error)
         }
+        // try {
+        //     const userCredential = await createUserWithEmailAndPassword(
+        //         auth,
+        //         data.email,
+        //         data.password
+        //     );
+        //
+        //     if (userCredential.user) {
+        //         const user = userCredential.user;
+        //
+        //         await setDoc(doc(firestore, "users", user.uid), {
+        //             name: data.name,
+        //             createdAt: new Date(),
+        //         });
+        //
+        //         toast.success("Cadastro realizado com sucesso", {
+        //             toastId: "customId",
+        //             position: "top-right",
+        //             autoClose: 4000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "colored",
+        //             transition: Bounce,
+        //         });
+        //
+        //         resetRegisterForm({
+        //             email: "",
+        //             password: "",
+        //             name: "",
+        //             confirmPassword: ""
+        //         })
+        //         setLoading(false)
+        //     }
+        // } catch (error: any) {
+        //     setLoading(false)
+        //
+        //     if (error) {
+        //         console.log('Register error: ', error.message);
+        //         let errorMessage = firebaseErrors[`${error.code}`] || "Falha no cadastro"
+        //
+        //         toast.error(errorMessage, {
+        //             toastId: "customId",
+        //             position: "top-right",
+        //             autoClose: 4000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "colored",
+        //             transition: Bounce,
+        //         });
+        //     } else {
+        //         toast.error("Falha no servidor", {
+        //             toastId: "customId",
+        //             position: "top-right",
+        //             autoClose: 4000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "colored",
+        //             transition: Bounce,
+        //         });
+        //     }
+        // }
     };
 
     return (
