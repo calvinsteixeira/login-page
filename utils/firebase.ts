@@ -1,7 +1,7 @@
 import {initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth";
 import {getFirestore, doc, setDoc, getDoc} from 'firebase/firestore';
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -25,10 +25,19 @@ const firebaseDeployConfig = {
 
 const firebaseConfig = isDevelopment ? firebaseLocalConfig : firebaseDeployConfig
 
-const firebaseErrors: Record<string, string>= {
-    "auth/email-already-in-use": "Email já cadastrado",
-    "auth/invalid-credential": "Credenciais inválidas",
-    "auth/weak-password": "A senha escolhida é fraca"
+const firebaseErrors: Record<string, { message: string, code: number }> = {
+    "auth/email-already-in-use": {
+        message: "Email já cadastrado",
+        code: 409
+    },
+    "auth/invalid-credential": {
+        message: "Credenciais inválidas",
+        code: 401
+    },
+    "auth/weak-password": {
+        message: "A senha escolhida é fraca",
+        code: 400
+    }
 }
 
 const app = initializeApp(firebaseConfig);
