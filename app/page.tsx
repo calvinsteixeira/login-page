@@ -48,52 +48,40 @@ const LoginForm = (): React.ReactNode => {
     const submitLogin = async (data: ILoginForm) => {
         setLoading(true)
         try {
-            const result = await signInWithEmailAndPassword(
-                auth,
-                data.email,
-                data.password
-            );
+            const response = await fetch('/api/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            const result = await response.json()
 
-            if (result.user.refreshToken) {
-                // redirect user
+            if (response.ok) {
+                // redirecionar o usuário
+
                 resetLoginForm({
                     email: "",
-                    password: ""
+                    password: "",
                 })
+                setLoading(false)
+            } else {
+                throw Error(result.message)
             }
         } catch (error: any) {
+            toast.error(error.message, {
+                toastId: "customId",
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
             setLoading(false)
-
-            if (error) {
-                console.log('Login error: ', error.message);
-                let errorMessage = firebaseErrors[`${error.code}`] || "Falha na autenticação"
-
-                toast.error(errorMessage, {
-                    toastId: "customId",
-                    position: "top-right",
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-            } else {
-                toast.error("Falha no servidor", {
-                    toastId: "customId",
-                    position: "top-right",
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-            }
         }
     };
     const submitLoginWithGoogle = async () => {
