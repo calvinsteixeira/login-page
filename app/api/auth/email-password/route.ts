@@ -14,7 +14,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
     } catch (error: any) {
         console.log(error)
-        let {message, code} = firebaseErrors[`${error.code}`] || "Falha na autenticação"
+        const {message, code} = firebaseErrors[`${error.code}`] || "Falha na autenticação"
         return NextResponse.json({message: message}, {status: code})
     }
 }

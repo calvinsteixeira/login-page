@@ -3,18 +3,13 @@
 import React from "react";
 import {ToastContainer, toast, Bounce} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
-} from "firebase/auth";
-import {auth, firestore, doc, setDoc, getDoc, firebaseErrors, googleProvider, signInWithPopup} from "@/utils/firebase";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {ILoginForm, IRegisterForm} from "@/types/forms";
 import {Input, Button} from "@/components";
 import {FcGoogle, MdOutlineKeyboardArrowRight} from "@/icons";
-import {NextResponse} from "next/server";
+import {auth, doc, firestore, getDoc, googleProvider, signInWithPopup} from "@/utils/firebase";
 
 type FormModeType = "login" | "register";
 
@@ -67,6 +62,7 @@ const LoginForm = (): React.ReactNode => {
             } else {
                 throw Error(result.message)
             }
+            setLoading(false)
         } catch (error: any) {
             toast.error(error.message, {
                 toastId: "customId",
@@ -84,45 +80,48 @@ const LoginForm = (): React.ReactNode => {
         }
     };
     const submitLoginWithGoogle = async () => {
-        setLoading(true)
-
         try {
-            const result = await signInWithPopup(auth, googleProvider)
-            const user = result.user;
+            const googleResult = await signInWithPopup(auth, googleProvider)
+            const user = googleResult.user
             const docRef = doc(firestore, 'users', user.uid)
             const docSnap = await getDoc(docRef)
 
             if (!docSnap.exists()) {
-                await setDoc(docRef, {
-                    name: user.displayName,
-                    createdAt: new Date()
-                });
+                setLoading(true)
 
-                // redirect user
+                const response = await fetch('/api/auth/google', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        userId: user.uid,
+                        userName: user.displayName
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
 
-                setLoading(false)
-            }
-        } catch (error: any) {
-            setLoading(false)
+                const result = await response.json()
 
-            if (error) {
-                console.log('Register error: ', error.message);
-                let errorMessage = firebaseErrors[`${error.code}`] || "Falha no cadastro"
+                if (response.ok) {
+                    setLoading(false)
+                    // redirect user
 
-                toast.error(errorMessage, {
-                    toastId: "customId",
-                    position: "top-right",
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
+                    resetLoginForm({
+                        email: "",
+                        password: ""
+                    })
+                } else {
+                    throw Error(result.message)
+                }
+
             } else {
-                toast.error("Falha no servidor", {
+                console.log(user)
+                // redirect user
+            }
+
+        } catch (error: any) {
+            if (error.status) { // make sure the error was handled on bff
+                toast.error(error.message, {
                     toastId: "customId",
                     position: "top-right",
                     autoClose: 4000,
@@ -301,17 +300,17 @@ export default function Home() {
                     <p className="text-muted text-sm">Insira seus dados para continuar</p>
                 </div>
                 <div className="w-full flex mb-12 flex-row justify-around gap-2">
-          <span
-              onClick={() => handleFormMode("login")}
-              className={`relative flex-1 flex justify-center items-center font-semibold px-4 py-3 text-primary gap-4`}
-          >
+            <span
+                onClick={() => handleFormMode("login")}
+                className={`relative flex-1 flex justify-center items-center font-semibold px-4 py-3 text-primary gap-4`}
+            >
             {formMode === "login" && (
                 <MdOutlineKeyboardArrowRight
                     size={22}
                     className="animate-bounce absolute left-[10%] text-md"
                 />
             )}
-              Entrar
+                Entrar
           </span>
                     <span
                         onClick={() => handleFormMode("register")}
