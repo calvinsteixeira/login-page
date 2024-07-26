@@ -15,7 +15,6 @@ import {ILoginForm, IRegisterForm} from "@/types/forms";
 import {Input, Button} from "@/components";
 import {FcGoogle, MdOutlineKeyboardArrowRight} from "@/icons";
 import {NextResponse} from "next/server";
-// import { registerWithEmailAndPassword } from "@/app/api/auth/route";
 
 type FormModeType = "login" | "register";
 
@@ -48,7 +47,7 @@ const LoginForm = (): React.ReactNode => {
     const submitLogin = async (data: ILoginForm) => {
         setLoading(true)
         try {
-            const response = await fetch('/api/auth', {
+            const response = await fetch('/api/auth/email-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
