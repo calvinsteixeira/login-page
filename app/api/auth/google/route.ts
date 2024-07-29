@@ -1,23 +1,29 @@
-import {NextRequest, NextResponse} from "next/server";
-import {auth, firebaseErrors, signInWithPopup, googleProvider, doc, firestore, getDoc, setDoc} from "@/utils/firebase";
+import { NextRequest, NextResponse } from "next/server";
+import { storeUserAccess } from "@/lib/actions/storeToken";
+import { auth, firebaseErrors, signInWithPopup, googleProvider, doc, firestore, getDoc, setDoc } from "@/utils/firebase";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-    try {
-        const { userId, userName } = await req.json()
+  try {
+    const { token, refreshToken, userId, userName } = await req.json();
 
-        const docRef = doc(firestore, "users", userId)
-        const docSnap = await getDoc(docRef)
+    const userDocRef = doc(firestore, "users", userId);
 
-        await setDoc(docRef, {
-            name: userName,
-            createdAt: new Date()
-        });
+    await setDoc(userDocRef, {
+      name: userName,
+      createdAt: new Date(),
+    });    
 
-        return NextResponse.json({}, {status: 201})
+    await storeUserAccess({
+      token: token,
+      refreshToken: refreshToken,
+      userId: userId,
+      userName: userName,
+    });
 
-    } catch (error: any) {
-        console.log(error)
-        const {message, code} = firebaseErrors[`${error.code}`] || "Falha na autenticação"
-        return NextResponse.json({message: message}, {status: code})
-    }
+    return NextResponse.json({}, { status: 201 });
+  } catch (error: any) {
+    console.log(error);
+    const { message, code } = firebaseErrors[`${error.code}`] || "Falha na autenticação";
+    return NextResponse.json({ message: message }, { status: code });
+  }
 }
