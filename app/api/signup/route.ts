@@ -13,7 +13,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             const user = userCredential.user
 
             await setDoc(doc(firestore, "users", user.uid), {
-                name: name,
+                displayName: name,
                 createdAt: new Date(),
             })
 

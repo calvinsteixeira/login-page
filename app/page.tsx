@@ -25,7 +25,6 @@ const LoginForm = (): React.ReactNode => {
             password: yup.string().required("campo obrigatório!"),
         })
         .required();
-
     const {
         register,
         handleSubmit,
@@ -38,7 +37,6 @@ const LoginForm = (): React.ReactNode => {
             password: "",
         },
     });
-
     const submitLogin = async (data: ILoginForm) => {
         setLoading(true)
         try {
@@ -142,7 +140,7 @@ const LoginForm = (): React.ReactNode => {
             <form className="space-y-10" onSubmit={handleSubmit(submitLogin)}>
                 <div className="space-y-2">
                     <Input.Root>
-                        <Input.Label text="usuário:"/>
+                        <Input.Label text="email:"/>
                         <Input.Generic {...register("email")} />
                         <Input.ErrorMessage text={errors.email?.message}/>
                     </Input.Root>
@@ -269,7 +267,7 @@ const RegisterForm = (): React.ReactNode => {
                 </Input.Root>
 
                 <Input.Root>
-                    <Input.Label text="Confirmação da senha:"/>
+                    <Input.Label text="confirmação da senha:"/>
                     <Input.Password {...register("confirmPassword")} />
                     <Input.ErrorMessage text={errors.confirmPassword?.message}/>
                 </Input.Root>
@@ -307,7 +305,7 @@ export default function Home() {
             {formMode === "login" && (
                 <MdOutlineKeyboardArrowRight
                     size={22}
-                    className="animate-bounce absolute left-[10%] text-md"
+                    className="absolute left-[10%] text-md"
                 />
             )}
                 Entrar
@@ -319,7 +317,7 @@ export default function Home() {
             {formMode === "register" && (
                 <MdOutlineKeyboardArrowRight
                     size={22}
-                    className="animate-bounce absolute left-[1%] text-md"
+                    className="absolute left-[1%] text-md"
                 />
             )}
                         Cadastrar
