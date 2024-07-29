@@ -22,6 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             token: await user.getIdToken(),
             refreshToken: user.refreshToken,
             userId: user.uid,
+            userName: userData?.name,
         })
 
         if (result.user.refreshToken) {

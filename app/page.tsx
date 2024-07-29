@@ -10,11 +10,13 @@ import {ILoginForm, IRegisterForm} from "@/types/forms";
 import {Input, Button} from "@/components";
 import {FcGoogle, MdOutlineKeyboardArrowRight} from "@/icons";
 import {auth, doc, firestore, getDoc, googleProvider, signInWithPopup} from "@/utils/firebase";
+import { useRouter } from "next/navigation"
 
 type FormModeType = "login" | "register";
 
 const LoginForm = (): React.ReactNode => {
     const [loading, setLoading] = React.useState<boolean>(false);
+    const router = useRouter()
 
     const loginSchema = yup
         .object({
@@ -50,13 +52,12 @@ const LoginForm = (): React.ReactNode => {
             const result = await response.json()
 
             if (response.ok) {
-                // redirecionar o usuário
-
                 resetLoginForm({
                     email: "",
                     password: "",
                 })
                 setLoading(false)
+                await router.push('/home')
             } else {
                 throw Error(result.message)
             }

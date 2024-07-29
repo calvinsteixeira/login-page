@@ -21,7 +21,6 @@ export async function storeUserAccess(request: StoreUserAccess): Promise<void> {
         sameSite: "strict",
         secure: true,
     })
-
     if (request.userName) {
         cookies().set({
             name: "userName",
@@ -31,7 +30,6 @@ export async function storeUserAccess(request: StoreUserAccess): Promise<void> {
             secure: true,
         })
     }
-
     cookies().set({
         name: "token",
         value: request.token,
