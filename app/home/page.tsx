@@ -3,7 +3,7 @@
 import React from "react";
 import { FcApproval } from "@/icons";
 
-export default function Page() {
+export default function Home() {
    function getCookie(cookieName: string) {
       const cookie = document.cookie.split("; ").find((row) => row.startsWith(`${cookieName}=`));
       if (cookie) {
