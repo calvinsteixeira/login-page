@@ -11,7 +11,7 @@ function Password(props: IPassword, ref: React.Ref<HTMLInputElement>) {
   }
 
   return (
-    <div className="flex items-center relative w-full max-w-xs mx-auto mt-10">
+    <div className="flex items-center relative mx-auto mt-10 w-full">
       <input
         ref={ref}
         {...props}
